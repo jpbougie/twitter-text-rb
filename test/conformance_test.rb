@@ -41,25 +41,31 @@ class ConformanceTest < Test::Unit::TestCase
   module AutolinkConformance
     def test_users_autolink_conformance
       run_conformance_test(File.join(@conformance_dir, 'autolink.yml'), :usernames) do |description, expected, input|
-        assert_equal expected, auto_link_usernames_or_lists(input), description
+        assert_equal expected, auto_link_usernames_or_lists(input, :suppress_no_follow => true), description
       end
     end
 
     def test_lists_autolink_conformance
       run_conformance_test(File.join(@conformance_dir, 'autolink.yml'), :lists) do |description, expected, input|
-        assert_equal expected, auto_link_usernames_or_lists(input), description
+        assert_equal expected, auto_link_usernames_or_lists(input, :suppress_no_follow => true), description
       end
     end
 
     def test_urls_autolink_conformance
       run_conformance_test(File.join(@conformance_dir, 'autolink.yml'), :urls) do |description, expected, input|
-        assert_equal expected, auto_link_urls_custom(input), description
+        assert_equal expected, auto_link_urls_custom(input, :suppress_no_follow => true), description
       end
     end
 
     def test_hashtags_autolink_conformance
       run_conformance_test(File.join(@conformance_dir, 'autolink.yml'), :hashtags) do |description, expected, input|
-        assert_equal expected, auto_link_hashtags(input), description
+        assert_equal expected, auto_link_hashtags(input, :suppress_no_follow => true), description
+      end
+    end
+
+    def test_all_autolink_conformance
+      run_conformance_test(File.join(@conformance_dir, 'autolink.yml'), :all) do |description, expected, input|
+        assert_equal expected, auto_link(input, :suppress_no_follow => true), description
       end
     end
   end
@@ -69,6 +75,8 @@ class ConformanceTest < Test::Unit::TestCase
 
   def run_conformance_test(file, test_type, &block)
     yaml = YAML.load_file(file)
+    assert yaml["tests"][test_type.to_s], "No such test suite: #{test_type.to_s}"
+
     yaml["tests"][test_type.to_s].each do |test_info|
       yield test_info['description'], test_info['expected'], test_info['text']
     end
