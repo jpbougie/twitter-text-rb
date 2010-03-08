@@ -27,8 +27,8 @@ module Twitter
     REGEXEN[:spaces] = Regexp.new(UNICODE_SPACES.collect{ |e| [e].pack 'U*' }.join('|'))
 
     REGEXEN[:at_signs] = /[@＠]/
-    REGEXEN[:extract_mentions] = /(^|[^a-zA-Z0-9_])[@＠]([a-zA-Z0-9_]{1,20})(?=(.|$))/
-    REGEXEN[:extract_reply] = /^(?:#{REGEXEN[:spaces]})*[@＠]([a-zA-Z0-9_]{1,20})/o
+    REGEXEN[:extract_mentions] = /(^|[^a-zA-Z0-9_])#{REGEXEN[:at_signs]}([a-zA-Z0-9_]{1,20})(?=(.|$))/o
+    REGEXEN[:extract_reply] = /^(?:#{REGEXEN[:spaces]})*#{REGEXEN[:at_signs]}([a-zA-Z0-9_]{1,20})/o
 
     REGEXEN[:list_name] = /^[a-zA-Z\x80-\xff].{0,79}$/
 
@@ -43,9 +43,9 @@ module Twitter
     REGEXEN[:auto_link_emoticon] = /(8\-\#|8\-E|\+\-\(|\`\@|\`O|\&lt;\|:~\(|\}:o\{|:\-\[|\&gt;o\&lt;|X\-\/|\[:-\]\-I\-|\/\/\/\/Ö\\\\\\\\|\(\|:\|\/\)|∑:\*\)|\( \| \))/
 
     # URL related hash regex collection
-    REGEXEN[:valid_preceeding_chars] = /(?:[^\/"':!=]|^|\:)/
-    REGEXEN[:valid_domain] = /(?:[\.-]|[^[:punct:]])+\.[a-z]{2,}(?::[0-9]+)?/i
-    REGEXEN[:valid_url_path_chars] = /[a-z0-9!\*'\(\);:&=\+\$\/%#\[\]\-_\.,~]/i
+    REGEXEN[:valid_preceding_chars] = /(?:[^\/"':!=]|^|\:)/
+    REGEXEN[:valid_domain] = /(?:[\.-]|[^[:punct:]\s])+\.[a-z]{2,}(?::[0-9]+)?/i
+    REGEXEN[:valid_url_path_chars] = /[\.\,]?[a-z0-9!\*'\(\);:&=\+\$\/%#\[\]\-_,~@]/i
     # Valid end-of-path chracters (so /foo. does not gobble the period).
     #   1. Allow ) for Wikipedia URLs.
     #   2. Allow =&# for empty URL parameters and other URL-join artifacts
@@ -54,7 +54,7 @@ module Twitter
     REGEXEN[:valid_url_query_ending_chars] = /[a-z0-9_&=#]/i
     REGEXEN[:valid_url] = %r{
       (                                                                                     #   $1 total match
-        (#{REGEXEN[:valid_preceeding_chars]})                                               #   $2 Preceeding chracter
+        (#{REGEXEN[:valid_preceding_chars]})                                                #   $2 Preceeding chracter
         (                                                                                   #   $3 URL
           (https?:\/\/|www\.)                                                               #   $4 Protocol or beginning
           (#{REGEXEN[:valid_domain]})                                                       #   $5 Domain(s) and optional post number

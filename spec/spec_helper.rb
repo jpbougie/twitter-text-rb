@@ -3,6 +3,11 @@ $:.push File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'twitter-text'
 require 'hpricot'
+require 'spec/test_urls'
+
+Spec::Runner.configure do |config|
+  config.include TestUrls
+end
 
 Spec::Matchers.define :match_autolink_expression do
   match do |string|
@@ -81,6 +86,10 @@ Spec::Matchers.define :have_autolinked_hashtag do |hashtag|
   end
 
   failure_message_for_should do |text|
-    "Expected hashtag #{hashtag} to be autolinked in '#{text}'"
+    if @link
+      "Expected link text to be #{hashtag}, but it was #{@link.inner_text}"
+    else
+      "Expected hashtag #{hashtag} to be autolinked in '#{text}', but no link was found."
+    end
   end
 end
