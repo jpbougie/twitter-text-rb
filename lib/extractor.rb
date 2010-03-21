@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Twitter
   # A module for including Tweet parsing in a class. This module provides function for the extraction and processing
   # of usernames, lists, URLs and hashtags.

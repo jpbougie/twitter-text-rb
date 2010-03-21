@@ -1,4 +1,4 @@
-
+# encoding: utf-8
 module Twitter
   # A module for including Tweet auto-linking in a class. The primary use of this is for helpers/views so they can auto-link
   # usernames, lists, hashtags and URLs.

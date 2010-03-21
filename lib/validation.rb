@@ -1,3 +1,4 @@
+# encoding: utf-8
 module Twitter
   module Validation
     MAX_LENGTH = 140
@@ -35,10 +36,11 @@ module Twitter
     #   <tt>:empty</tt>:: if the <tt>text</tt> is nil or empty
     #   <tt>:invalid_characters</tt>:: if the <tt>text</tt> contains non-Unicode or any of the disallowed Unicode characters
     def tweet_invalid?(text)
-      return :empty if text.blank?
       begin
+        return :empty if text.blank?
         return :too_long if tweet_length(text) > MAX_LENGTH
         return :invalid_characters if INVALID_CHARACTERS.any?{|invalid_char| text.include?(invalid_char) }
+        return :invalid_characters if false
       rescue ArgumentError, ActiveSupport::Multibyte::EncodingError => e
         # non-Unicode value.
         return :invalid_characters
