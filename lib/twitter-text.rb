@@ -6,8 +6,8 @@ end
 # Needed for auto-linking
 require 'action_view'
 
-require File.join(File.dirname(__FILE__), 'regex')
-require File.join(File.dirname(__FILE__), 'autolink')
-require File.join(File.dirname(__FILE__), 'extractor')
-require File.join(File.dirname(__FILE__), 'unicode')
-require File.join(File.dirname(__FILE__), 'validation')
+require 'regex'
+require 'autolink'
+require 'extractor'
+require 'unicode'
+require 'validation'
